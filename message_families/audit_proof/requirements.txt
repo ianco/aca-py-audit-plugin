@@ -1,4 +1,3 @@
 aiohttp
 aiohttp_apispec
 marshmallow==3.0.0
-aries_cloudagent

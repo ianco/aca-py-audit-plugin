@@ -7,7 +7,7 @@ from aries_cloudagent.revocation.models.revocation_registry import RevocationReg
 from aries_cloudagent.core.error import BaseError
 from aries_cloudagent.core.profile import ProfileSession
 from aries_cloudagent.ledger.base import BaseLedger
-from aries_cloudagent.verifier.base import BaseVerifier
+from aries_cloudagent.indy.verifier import IndyVerifier
 
 
 class AuditProofManagerError(BaseError):
@@ -106,7 +106,7 @@ class AuditProofManager:
                                 identifier["timestamp"]
                             ] = found_rev_reg_entry
 
-        verifier: BaseVerifier = await self.session.inject(BaseVerifier)
+        verifier: IndyVerifier = await self.session.inject(IndyVerifier)
         verified = await verifier.verify_presentation(
             indy_proof_request,
             indy_proof,

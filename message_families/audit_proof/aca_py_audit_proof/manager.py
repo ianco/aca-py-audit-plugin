@@ -2,11 +2,10 @@
 
 import logging
 
-from aries_cloudagent.config.injection_context import InjectionContext
 from aries_cloudagent.core.error import BaseError
 from aries_cloudagent.revocation.models.revocation_registry import RevocationRegistry
-from aries_cloudagent.config.injection_context import InjectionContext
 from aries_cloudagent.core.error import BaseError
+from aries_cloudagent.core.profile import ProfileSession
 from aries_cloudagent.ledger.base import BaseLedger
 from aries_cloudagent.verifier.base import BaseVerifier
 
@@ -18,26 +17,26 @@ class AuditProofManagerError(BaseError):
 class AuditProofManager:
     """Class for providing proof audits."""
 
-    def __init__(self, context: InjectionContext):
+    def __init__(self, session: ProfileSession):
         """
         Initialize an AuditProofManager.
 
         Args:
-            context: The context for this proof audit
+            session: The session for this proof audit
         """
-        self._context = context
+        self._session = session
         self._logger = logging.getLogger(__name__)
 
     @property
-    def context(self) -> InjectionContext:
+    def session(self) -> ProfileSession:
         """
-        Accessor for the current injection context.
+        Accessor for the current injection session.
 
         Returns:
-            The injection context for this connection
+            The injection session for this connection
 
         """
-        return self._context
+        return self._session
 
     async def verify_presentation(
         self, presentation_request: dict, presentation: dict
@@ -65,7 +64,7 @@ class AuditProofManager:
         rev_reg_entries = {}
 
         identifiers = indy_proof["identifiers"]
-        ledger: BaseLedger = await self.context.inject(BaseLedger)
+        ledger: BaseLedger = await self.session.inject(BaseLedger)
         async with ledger:
             for identifier in identifiers:
                 schema_ids.append(identifier["schema_id"])
@@ -107,7 +106,7 @@ class AuditProofManager:
                                 identifier["timestamp"]
                             ] = found_rev_reg_entry
 
-        verifier: BaseVerifier = await self.context.inject(BaseVerifier)
+        verifier: BaseVerifier = await self.session.inject(BaseVerifier)
         verified = await verifier.verify_presentation(
             indy_proof_request,
             indy_proof,

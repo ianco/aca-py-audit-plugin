@@ -106,7 +106,7 @@ class AuditProofManager:
                                 identifier["timestamp"]
                             ] = found_rev_reg_entry
 
-                            verifier = self._profile.inject(IndyVerifier)
+        verifier = self._profile.inject(IndyVerifier)
         verified = await verifier.verify_presentation(
             indy_proof_request,
             indy_proof,

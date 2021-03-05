@@ -5,6 +5,8 @@ from aiohttp_apispec import docs, request_schema
 
 from marshmallow import fields, Schema
 
+from aries_cloudagent.admin.request_context import AdminRequestContext
+
 from .manager import AuditProofManager
 
 
@@ -31,9 +33,10 @@ async def audit_proof_verify(request: web.BaseRequest):
         request: aiohttp request object
 
     """
-    session = await context.session
+    context: AdminRequestContext = request["context"]
     outbound_handler = request.app["outbound_message_router"]
     body = await request.json()
+    session = await context.session()
 
     presentation_request = body.get("presentation_request")
     presentation = body.get("presentation")

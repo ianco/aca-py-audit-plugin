@@ -5,7 +5,7 @@ import logging
 from aries_cloudagent.core.error import BaseError
 from aries_cloudagent.revocation.models.revocation_registry import RevocationRegistry
 from aries_cloudagent.core.error import BaseError
-from aries_cloudagent.core.profile import ProfileSession
+from aries_cloudagent.core.profile import Profile
 from aries_cloudagent.ledger.base import BaseLedger
 from aries_cloudagent.indy.verifier import IndyVerifier
 
@@ -17,26 +17,26 @@ class AuditProofManagerError(BaseError):
 class AuditProofManager:
     """Class for providing proof audits."""
 
-    def __init__(self, session: ProfileSession):
+    def __init__(self, profile: Profile):
         """
         Initialize an AuditProofManager.
 
         Args:
-            session: The session for this proof audit
+            profile: The profile for this proof audit
         """
-        self._session = session
+        self._profile = profile
         self._logger = logging.getLogger(__name__)
 
     @property
-    def session(self) -> ProfileSession:
+    def profile(self) -> Profile:
         """
-        Accessor for the current injection session.
+        Accessor for the current injection profile.
 
         Returns:
-            The injection session for this connection
+            The injection profile for this connection
 
         """
-        return self._session
+        return self._profile
 
     async def verify_presentation(
         self, presentation_request: dict, presentation: dict
@@ -106,7 +106,7 @@ class AuditProofManager:
                                 identifier["timestamp"]
                             ] = found_rev_reg_entry
 
-        verifier: IndyVerifier = await self.session.inject(IndyVerifier)
+                            verifier = self._profile.inject(IndyVerifier)
         verified = await verifier.verify_presentation(
             indy_proof_request,
             indy_proof,

@@ -31,14 +31,14 @@ async def audit_proof_verify(request: web.BaseRequest):
         request: aiohttp request object
 
     """
-    context = request.app["request_context"]
+    session = await context.session
     outbound_handler = request.app["outbound_message_router"]
     body = await request.json()
 
     presentation_request = body.get("presentation_request")
     presentation = body.get("presentation")
 
-    audit_proof_manager = AuditProofManager(context)
+    audit_proof_manager = AuditProofManager(session)
 
     verified = await audit_proof_manager.verify_presentation(
         presentation_request, presentation

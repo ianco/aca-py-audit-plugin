@@ -8,12 +8,13 @@ sleep 5
  --endpoint http://${DOCKERHOST}:7020 \
  --inbound-transport http 0.0.0.0 7020 \
  --outbound-transport http --admin 0.0.0.0 7021 \
- --label Faber.Agent \
+ --label Audit.Agent \
  --auto-ping-connection \
  --auto-respond-messages \
  --auto-accept-invites \
  --auto-accept-requests \
  --admin-insecure-mode \
+ --auto-provision \
  --wallet-type indy \
  --wallet-name audit.agent390822 \
  --wallet-key audit.Agent390822 \

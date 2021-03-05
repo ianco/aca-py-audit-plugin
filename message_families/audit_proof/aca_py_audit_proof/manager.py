@@ -64,7 +64,7 @@ class AuditProofManager:
         rev_reg_entries = {}
 
         identifiers = indy_proof["identifiers"]
-        ledger: BaseLedger = await self.session.inject(BaseLedger)
+        ledger = self._profile.inject(BaseLedger)
         async with ledger:
             for identifier in identifiers:
                 schema_ids.append(identifier["schema_id"])
